@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+<div class="auth-card">
+    <h1>Welcome, {{ current_user.name }}!</h1>
+    <p>You are logged in as <strong>{{ current_user.role.value }}</strong>.</p>
+    <p>Catalog, cart, orders, and the admin dashboard will appear here as later phases are built.</p>
+</div>
+{% endblock %}

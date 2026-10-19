@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Shop{% endblock %} | E-Shop</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-inner">
+            <a class="brand" href="{{ url_for('auth.index_redirect') }}">E-Shop</a>
+            <nav class="nav-links">
+                {% if current_user.is_authenticated and current_user.is_admin %}
+                    <a href="#">Dashboard</a>
+                    <a href="{{ url_for('admin.list_products') }}">Products</a>
+                    <a href="#">Categories</a>
+                    <span class="nav-user">Hi, {{ current_user.name }} ({{ current_user.role.value }})</span>
+                    <a href="{{ url_for('auth.logout') }}">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('customer.catalog') }}">Catalog</a>
+                    <a href="{{ url_for('customer.view_cart') }}">Cart{% if cart_count %} ({{ cart_count }}){% endif %}</a>
+                    {% if current_user.is_authenticated %}
+                        <a href="#">My Orders</a>
+                        <span class="nav-user">Hi, {{ current_user.name }} ({{ current_user.role.value }})</span>
+                        <a href="{{ url_for('auth.logout') }}">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}">Login</a>
+                        <a href="{{ url_for('auth.register') }}">Register</a>
+                    {% endif %}
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; {{ current_year }} E-Shop &mdash; Inventory Management System</p>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
